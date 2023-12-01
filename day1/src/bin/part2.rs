@@ -1,6 +1,7 @@
 use std::{
     collections::{BTreeMap, HashMap},
     fs,
+    ops::Add,
 };
 
 // Example: "eightwothree" -> [8, 2, 3]
@@ -32,9 +33,9 @@ fn calibration_value(string: &str) -> u32 {
             });
     });
 
-    let (_, first) = &numbers.first_key_value().unwrap();
-    let (_, last) = &numbers.last_key_value().unwrap();
-    *first + *last
+    let (_, first) = numbers.first_key_value().unwrap();
+    let (_, last) = numbers.last_key_value().unwrap();
+    format!("{}{}", first, last).parse::<u32>().unwrap()
 }
 
 fn main() {
