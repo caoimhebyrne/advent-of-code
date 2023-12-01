@@ -35,7 +35,7 @@ fn calibration_value(string: &str) -> u32 {
 
     let (_, first) = numbers.first_key_value().unwrap();
     let (_, last) = numbers.last_key_value().unwrap();
-    format!("{}{}", first, last).parse::<u32>().unwrap()
+    [*first, *last].iter().fold(0, |acc, elem| acc * 10 + elem)
 }
 
 fn main() {
