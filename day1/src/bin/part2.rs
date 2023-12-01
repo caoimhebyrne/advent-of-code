@@ -4,7 +4,7 @@ use std::{
 };
 
 // Example: "eightwothree" -> [8, 2, 3]
-fn parse_numbers_from_string(string: &str) -> Vec<u32> {
+fn calibration_value(string: &str) -> u32 {
     let word_to_number: HashMap<&str, u32> = HashMap::from([
         ("one", 1),
         ("two", 2),
@@ -32,22 +32,14 @@ fn parse_numbers_from_string(string: &str) -> Vec<u32> {
             });
     });
 
-    // TODO: Is there a way to avoid cloning here?
-    numbers.values().cloned().collect::<Vec<u32>>()
+    let (_, first) = &numbers.first_key_value().unwrap();
+    let (_, last) = &numbers.last_key_value().unwrap();
+    *first + *last
 }
 
 fn main() {
     let contents = fs::read_to_string("input.txt").unwrap();
-    let sum = contents
-        .lines()
-        .map(|line| {
-            let numbers = parse_numbers_from_string(line);
-            let first = numbers.first().unwrap();
-            let last = numbers.last().unwrap();
-
-            format!("{}{}", first, last).parse::<u32>().unwrap()
-        })
-        .sum::<u32>();
+    let sum = contents.lines().map(calibration_value).sum::<u32>();
 
     println!("Sum of all calibration values: {:?}", sum);
 }
