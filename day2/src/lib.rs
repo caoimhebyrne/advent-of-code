@@ -6,20 +6,10 @@ pub struct Game {
 
 impl Game {
     pub fn parse(input: String) -> Option<Self> {
-        let mut header_and_content = input.split(": ");
+        let (header_str, sets_str) = input.split_once(": ")?;
 
-        let id = header_and_content
-            .next()?
-            .replace("Game ", "")
-            .trim()
-            .parse::<u32>()
-            .ok()?;
-
-        let sets = header_and_content
-            .next()?
-            .split("; ")
-            .flat_map(Set::parse)
-            .collect();
+        let id = header_str.replace("Game ", "").parse::<u32>().ok()?;
+        let sets = sets_str.split("; ").flat_map(Set::parse).collect();
 
         Some(Self { id, sets })
     }
