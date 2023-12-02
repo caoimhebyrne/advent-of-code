@@ -1,58 +1,43 @@
-use std::{collections::HashMap, fs};
+// use std::{collections::HashMap, fs};
+
+// fn main() {
+//     let contents = fs::read_to_string("input.txt").unwrap();
+
+//     /*
+//      let mut min_map = HashMap::new();
+
+//     */
+//     println!("Total Power: {total_power}");
+// }
+
+use day2::{Game, Set};
+use std::fs;
 
 fn main() {
     let contents = fs::read_to_string("input.txt").unwrap();
-
-    let mut total_power = 0;
-
-    contents
+    let total_power: u32 = contents
         .lines()
-        .map(|it| it.split(": "))
-        .for_each(|mut section| {
-            let _ = section
-                .next()
-                .unwrap()
-                .replace("Game ", "")
-                .parse::<u32>()
-                .unwrap();
+        .map(|line| {
+            let game = Game::parse(line.to_string()).unwrap();
+            let mut min_set = Set::new();
 
-            // 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-            let subsets: Vec<HashMap<&str, u32>> = section
-                .next()
-                .unwrap()
-                .split(';')
-                .map(|it| {
-                    it.split(", ")
-                        // 3 blue
-                        .map(|it| {
-                            let mut amount_and_color = it.trim().split(' ');
-                            let amount = amount_and_color.next().unwrap().parse::<u32>().unwrap();
-                            let color = amount_and_color.next().unwrap();
+            for set in game.sets {
+                if set.red > min_set.red {
+                    min_set.red = set.red;
+                }
 
-                            (color, amount)
-                        })
-                        .collect()
-                })
-                .collect();
+                if set.green > min_set.green {
+                    min_set.green = set.green;
+                }
 
-            let mut min_map = HashMap::new();
-
-            for subset in subsets {
-                for (color, amount) in subset {
-                    let min_amount = min_map.get(color).unwrap_or(&0);
-
-                    if amount > *min_amount {
-                        min_map.insert(color, amount);
-                    }
+                if set.blue > min_set.blue {
+                    min_set.blue = set.blue;
                 }
             }
 
-            let min_red = *min_map.get("red").unwrap_or(&1);
-            let min_green = *min_map.get("green").unwrap_or(&1);
-            let min_blue = *min_map.get("blue").unwrap_or(&1);
-
-            total_power += min_red * min_green * min_blue;
-        });
+            min_set.power()
+        })
+        .sum();
 
     println!("Total Power: {total_power}");
 }
