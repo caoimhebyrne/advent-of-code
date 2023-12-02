@@ -1,15 +1,3 @@
-// use std::{collections::HashMap, fs};
-
-// fn main() {
-//     let contents = fs::read_to_string("input.txt").unwrap();
-
-//     /*
-//      let mut min_map = HashMap::new();
-
-//     */
-//     println!("Total Power: {total_power}");
-// }
-
 use day2::{Game, Set};
 use std::fs;
 
