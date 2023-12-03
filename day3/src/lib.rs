@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct Position {
     pub start: usize,
     pub end: usize,
@@ -17,13 +17,13 @@ impl Position {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub enum TokenType {
     Symbol(char),
     Number(u32),
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct Token {
     pub token_type: TokenType,
     pub position: Position,
@@ -126,7 +126,11 @@ impl Parser {
     }
 }
 
-pub fn has_neighboring_symbol(lines: &[Vec<Token>], line_i: usize, position: &Position) -> bool {
+pub fn has_neighboring_symbol(
+    lines: &[Vec<Token>],
+    line_i: usize,
+    position: &Position,
+) -> Option<(usize, Token)> {
     let min_line = line_i.checked_sub(1).unwrap_or(line_i);
     let max_line = line_i + 1;
 
@@ -142,12 +146,12 @@ pub fn has_neighboring_symbol(lines: &[Vec<Token>], line_i: usize, position: &Po
                     let max_end = position.end + 1;
 
                     if symbol_position.start >= min_start && symbol_position.end <= max_end {
-                        return true;
+                        return Some((index, *token));
                     }
                 }
             }
         }
     }
 
-    false
+    None
 }

@@ -20,7 +20,7 @@ fn main() {
         } in tokens
         {
             if let TokenType::Number(value) = token_type {
-                if has_neighboring_symbol(&lines, i, position) {
+                if has_neighboring_symbol(&lines, i, position).is_some() {
                     valid_numbers.push(*value);
                 }
             }
