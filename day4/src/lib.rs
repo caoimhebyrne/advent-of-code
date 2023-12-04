@@ -1,5 +1,5 @@
 // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Card {
     pub id: u32,
     pub expected_numbers: Vec<u32>,
@@ -30,14 +30,16 @@ impl Card {
         })
     }
 
-    pub fn score(&self) -> u32 {
-        let winning_numbers = self
-            .actual_numbers
+    pub fn matching_numbers(&self) -> usize {
+        self.actual_numbers
             .iter()
             .filter(|it| self.expected_numbers.contains(it))
-            .count();
+            .count()
+    }
 
-        if winning_numbers == 0 {
+    pub fn score(&self) -> u32 {
+        let matching_numbers = self.matching_numbers();
+        if matching_numbers == 0 {
             return 0;
         }
 
@@ -45,7 +47,7 @@ impl Card {
         let mut score = 1;
 
         // ... and then doubled for each match after the first
-        for _ in 1..winning_numbers {
+        for _ in 1..matching_numbers {
             score *= 2;
         }
 
